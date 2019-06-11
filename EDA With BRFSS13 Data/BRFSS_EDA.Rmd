@@ -1,0 +1,84 @@
+
+## Setup
+
+### Load packages
+
+```{r load-packages, message = FALSE}
+library(ggplot2)
+library(dplyr)
+library(readr)
+library(purrr)
+library(tidyr)
+
+```
+
+### Load data
+
+
+
+```{r load-data}
+load("brfss2013.RData")
+```
+
+
+
+* * *
+
+## Part 1: Data
+
+Non-institutionalized adult population, aged 18 years or older, who:
+
+
+
+* Reside in any of the 50 U.S. states, the District of Columbia, Puerto Rico, and Guam. These areas collect data annually.
+
+* Reside in American Samoa, Federated States of Micronesia, and Palau.  These areas collect survey data over a limited point-in-time (usually one to three months). 
+
+
+
+Note: In this document, the term "state" is used to refer to all areas participating in BRFSS, including the District of Columbia, Guam, and the Commonwealth of Puerto Rico.
+
+* * *
+
+## Part 2: Research questions
+
+**Research quesion 1:**
+
+Do Gender and General Health share any relationship ?
+```{r}
+dat1 <- brfss2013 %>%  select(sex,genhlth) %>% na.omit() %>% group_by(sex,genhlth)  %>% summarise(count = n()) %>% mutate(perc = count/sum(count))
+ggplot(data= dat1, aes(x = sex, y = perc * 100,fill = genhlth)) + geom_bar(stat = "identity")
+```
+
+No, they do not. The percentage distribution is almost the same.
+
+**Research quesion 2:**
+
+Do people with Good Mental Health exercise more or less than people with bad mental health ? Are the two variables related in any way ?
+
+```{r}
+dat2 <- brfss2013 %>% select(menthlth,exerany2) %>% na.omit() %>% mutate(Mental_Health = ifelse(menthlth >= 15 , "Poor Mental Health", "Good Mental Health"))
+dat2 <- dat2 %>% group_by(Mental_Health,exerany2) %>% summarise(count = n()) %>% mutate(perc = count/sum(count))
+ggplot(data=dat2,aes(x=Mental_Health,y=perc,fill = exerany2)) + geom_bar(stat="identity") 
+```
+
+Here, we can see that the percentage of people with Good Mental Health exercise more than the percentage of people with Bad Mental health. We could conclude that the two are correlated.
+
+
+
+**Research quesion 3:**
+
+Do  Women with less education have more kids in the household than women with more education? 
+```{r}
+f_edu <- brfss2013 %>% select(sex,X_educag,children) %>% na.omit() %>% filter(sex == "Female") %>% mutate(Education_Lvl = ifelse(X_educag == "Did not graduate high school", "High School Drop Out", "Graduated High School")) %>% group_by(Education_Lvl,children) %>% summarise(cnt = n()) %>% mutate(Total_Children = children * cnt) %>% group_by(Education_Lvl)%>% summarise(Avg_Children_Per_HouseHold = sum(Total_Children)/sum(cnt))
+
+ggplot(f_edu, aes(x=Education_Lvl, y=Avg_Children_Per_HouseHold)) + geom_bar(stat="identity", position="dodge") 
+```
+
+
+
+The bar graph shows that women who did not graduate high school are part of households with more children.
+
+
+* * *
+
