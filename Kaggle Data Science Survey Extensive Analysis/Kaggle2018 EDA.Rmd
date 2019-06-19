@@ -1,0 +1,60 @@
+---
+title: "Extensive EDA - Kaggle Survey 2018"
+author: "Bhavani"
+date: "June 19, 2019"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+Loading Libraries
+```{r}
+library(readr)
+library(purrr)
+library(dplyr)
+library(ggplot2)
+library(stringr)
+
+```
+
+Load the data 
+```{r}
+
+
+survey1 <- read_csv("C:Users/BhavaniC/Downloads/multipleChoiceResponses.csv")
+survey2 <- read_csv("C:Users/BhavaniC/Downloads/freeFormResponses.csv")
+```
+
+Let's look at the Gender of the Respondents.
+
+```{r}
+gender <- survey1 %>% filter(Q1 == "Male"| Q1 == "Female") %>% group_by(Q1) %>% summarise(count = n())
+
+ggplot(data=gender, aes(x = Q1 , y = count/sum(count))) + geom_bar(stat = "identity") + xlab("Gender") +ylab("Respondents") + scale_y_continuous(labels = scales::percent)
+```
+
+We can see from the plot above, that more than 80% of the respondents were Men. It would also be interesting to see the respondents' home countries.
+
+```{r}
+countries <- survey1  %>% group_by(Q3)  %>% summarise(count = n()) %>% arrange(desc(count)) %>% top_n(10)
+  
+  
+ggplot(data=countries, aes(x = reorder(Q3,count) , y = count/sum(count))) + geom_bar(stat = "identity") + xlab("Gender") +ylab("Respondents")  + coord_flip() + scale_y_continuous( labels = scales::percent) 
+```
+
+Most kaggle users seem to be from USA or India. These two countries are dominant. 
+
+Let's also check their academic backgrounds. Are people looking to study Data Science after obtaining a graduate degree ?
+
+
+```{r}
+survey1 %>% 
+filter(Q4!="") %>%
+filter(Q1=="Male"|Q1=="Female")%>%
+ggplot(aes(Q4))+ 
+geom_bar(aes(fill=Q1))+
+theme(axis.text.x = element_text(angle = 15,hjust = 0.5, size =7))+
+theme(legend.position="none")+xlab("Academic qualification ")+
+scale_x_discrete(labels = function(x) str_wrap(x, width = 8))
+```
+
