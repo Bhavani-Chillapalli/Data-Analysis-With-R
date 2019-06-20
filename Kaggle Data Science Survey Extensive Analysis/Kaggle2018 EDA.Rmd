@@ -3,6 +3,7 @@ title: "Extensive EDA - Kaggle Survey 2018"
 author: "Bhavani"
 date: "June 19, 2019"
 output:
+  word_document: default
   pdf_document: default
   html_document: default
 ---
@@ -47,14 +48,13 @@ Most kaggle users seem to be from USA or India. These two countries are dominant
 Let's also check their academic backgrounds. Are people looking to study Data Science after obtaining a graduate degree ?
 
 
+
 ```{r}
-survey1 %>% 
-filter(Q4!="") %>%
-filter(Q1=="Male"|Q1=="Female")%>%
-ggplot(aes(Q4))+ 
-geom_bar(aes(fill=Q1))+
-theme(axis.text.x = element_text(angle = 15,hjust = 0.5, size =7))+
-theme(legend.position="none")+xlab("Academic qualification ")+
+survey1 %>% filter(Q1 == "Female" | Q1 == "Male") %>% ggplot(aes(Q4)) +geom_bar(aes(fill = Q1)) + theme(axis.text.x = element_text(angle = 15,hjust = 0.5, size =7)) +theme(legend.position="none")+xlab("Academic qualification ")+
 scale_x_discrete(labels = function(x) str_wrap(x, width = 8))
 ```
+Most Kaggle users seem to have either a Bachelor's Degree or a Master's Degree. It seems that people with an advanced degree are interested in  pursuing a career in data science. 
+
+
+
 
