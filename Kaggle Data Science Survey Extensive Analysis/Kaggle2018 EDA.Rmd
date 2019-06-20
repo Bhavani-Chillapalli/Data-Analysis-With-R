@@ -55,6 +55,13 @@ scale_x_discrete(labels = function(x) str_wrap(x, width = 8))
 ```
 Most Kaggle users seem to have either a Bachelor's Degree or a Master's Degree. It seems that people with an advanced degree are interested in  pursuing a career in data science. 
 
+Let's try to understand how old the users are.
+
+```{r}
+survey1 %>% filter(Q1 == "Female" | Q1 == "Male")  %>% ggplot(aes(Q2)) + geom_bar(aes(fill = Q4)) +xlab("Age Group") + coord_flip() 
+```
+
+Kaggle is used by people in the 25-29 age group , followed closely by people in the 22-24 age group. Most of these users have a Master's degree.
 
 
 
