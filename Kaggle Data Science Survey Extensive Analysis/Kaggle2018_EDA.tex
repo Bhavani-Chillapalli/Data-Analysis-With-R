@@ -250,18 +250,89 @@ Data Science after obtaining a graduate degree ?
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{survey1 %>%}\StringTok{ }
-\KeywordTok{filter}\NormalTok{(Q4!=}\StringTok{""}\NormalTok{) %>%}
-\KeywordTok{filter}\NormalTok{(Q1==}\StringTok{"Male"}\NormalTok{|Q1==}\StringTok{"Female"}\NormalTok{)%>%}
-\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(Q4))+}\StringTok{ }
-\KeywordTok{geom_bar}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{fill=}\NormalTok{Q1))+}
-\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{angle =} \DecValTok{15}\NormalTok{,}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{, }\DataTypeTok{size =}\DecValTok{7}\NormalTok{))+}
-\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position=}\StringTok{"none"}\NormalTok{)+}\KeywordTok{xlab}\NormalTok{(}\StringTok{"Academic qualification "}\NormalTok{)+}
+\NormalTok{survey1 %>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(Q1 ==}\StringTok{ "Female"} \NormalTok{|}\StringTok{ }\NormalTok{Q1 ==}\StringTok{ "Male"}\NormalTok{) %>%}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(Q4)) +}\KeywordTok{geom_bar}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{fill =} \NormalTok{Q1)) +}\StringTok{ }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{angle =} \DecValTok{15}\NormalTok{,}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{, }\DataTypeTok{size =}\DecValTok{7}\NormalTok{)) +}\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position=}\StringTok{"none"}\NormalTok{)+}\KeywordTok{xlab}\NormalTok{(}\StringTok{"Academic qualification "}\NormalTok{)+}
 \KeywordTok{scale_x_discrete}\NormalTok{(}\DataTypeTok{labels =} \NormalTok{function(x) }\KeywordTok{str_wrap}\NormalTok{(x, }\DataTypeTok{width =} \DecValTok{8}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
 \includegraphics{Kaggle2018_EDA_files/figure-latex/unnamed-chunk-5-1.pdf}
+Most Kaggle users seem to have either a Bachelor's Degree or a Master's
+Degree. It seems that people with an advanced degree are interested in
+pursuing a career in data science.
+
+Let's try to understand how old the users are and what their academic
+backgrounds are.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey1 %>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(Q1 ==}\StringTok{ "Female"} \NormalTok{|}\StringTok{ }\NormalTok{Q1 ==}\StringTok{ "Male"}\NormalTok{)  %>%}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(Q2)) +}\StringTok{ }\KeywordTok{geom_bar}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{fill =} \NormalTok{Q4)) +}\KeywordTok{xlab}\NormalTok{(}\StringTok{"Age Group"}\NormalTok{) +}\StringTok{ }\KeywordTok{coord_flip}\NormalTok{() }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Kaggle2018_EDA_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+Kaggle is used by people in the 25-29 age group , followed closely by
+people in the 22-24 age group. Most of these users have a Master's
+degree.
+
+Let's look at how much people are earning.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{survey1 %>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(Q9 !=}\StringTok{ " "}\NormalTok{) %>%}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(Q9)) +}\KeywordTok{geom_bar}\NormalTok{()+}\StringTok{ }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{angle =} \DecValTok{20}\NormalTok{,}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{,}\DataTypeTok{size =} \DecValTok{6}\NormalTok{)) +}\KeywordTok{xlab}\NormalTok{(}\StringTok{"Salary"}\NormalTok{) +}\StringTok{ }\KeywordTok{coord_flip}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Kaggle2018_EDA_files/figure-latex/unnamed-chunk-7-1.pdf}
+Most people earn between 0 - 10000. According do this number, we can
+assume that most users are students. Let's confirm this by looking at
+their job titles.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dat1 <-}\StringTok{ }\NormalTok{survey1 %>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(Q9 !=}\StringTok{ " "}\NormalTok{) %>%}\StringTok{ }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Salary_Group =} \KeywordTok{ifelse}\NormalTok{(Q9 ==}\StringTok{ "0-10,000"}\NormalTok{,}\StringTok{"Less than 10000"}\NormalTok{,}\StringTok{"Greater than 10000"}\NormalTok{))}
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data=}\NormalTok{dat1,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Q6),}\DataTypeTok{size =} \DecValTok{20}\NormalTok{) +}\StringTok{ }\KeywordTok{geom_bar}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{fill =} \NormalTok{Salary_Group)) +}\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{angle =} \DecValTok{20}\NormalTok{,}\DataTypeTok{size =} \DecValTok{5}\NormalTok{,}\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{)) +}\StringTok{ }\KeywordTok{scale_x_discrete}\NormalTok{(}\DataTypeTok{labels =} \NormalTok{function(x) }\KeywordTok{str_wrap}\NormalTok{(x, }\DataTypeTok{width =} \DecValTok{8}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Kaggle2018_EDA_files/figure-latex/unnamed-chunk-8-1.pdf}
+It is evident that most people who earn Less than 10000 are
+students.Now, let's dig a little deeper into what the most popular
+Machine Learning Frameworks are.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{role <-}\StringTok{ }\NormalTok{survey1 %>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(Q6) %>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(!}\KeywordTok{is.na}\NormalTok{(Q6)) %>%}
+\StringTok{  }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{RoleCount =} \KeywordTok{n}\NormalTok{()) }
+
+\NormalTok{lang <-}\StringTok{ }\NormalTok{survey1 %>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(!}\KeywordTok{is.na}\NormalTok{(Q17)) %>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(Q6,Q17) %>%}
+\StringTok{  }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{Count =} \KeywordTok{n}\NormalTok{()) %>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(Count >}\StringTok{ }\DecValTok{1}\NormalTok{)}
+
+\NormalTok{ip <-}\StringTok{ }\KeywordTok{inner_join}\NormalTok{(role,lang,}\DataTypeTok{by=}\KeywordTok{c}\NormalTok{(}\StringTok{"Q6"}\NormalTok{))}
+
+\NormalTok{ip <-}\StringTok{ }\NormalTok{ip %>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Percentage =} \KeywordTok{round}\NormalTok{(Count/RoleCount*}\DecValTok{100}\NormalTok{,}\DecValTok{1}\NormalTok{))}
+
+\NormalTok{ip %>%}
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \NormalTok{Q6, }\DataTypeTok{y =} \NormalTok{Q17)) +}
+\StringTok{  }\KeywordTok{geom_tile}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{fill =} \NormalTok{Percentage),}\DataTypeTok{width =} \DecValTok{5}\NormalTok{) +}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_text}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{label =} \NormalTok{Percentage),}\DataTypeTok{position =} \KeywordTok{position_dodge}\NormalTok{(}\DataTypeTok{width=}\FloatTok{0.9}\NormalTok{),  }\DataTypeTok{size=}\DecValTok{2}\NormalTok{) +}
+\StringTok{  }\KeywordTok{theme_bw}\NormalTok{() +}
+\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{angle =} \DecValTok{30}\NormalTok{, }\DataTypeTok{hjust =} \DecValTok{1}\NormalTok{,}\DataTypeTok{size =} \DecValTok{7}\NormalTok{)) +}\KeywordTok{scale_fill_gradientn}\NormalTok{(}\DataTypeTok{colors =} \KeywordTok{c}\NormalTok{(}\StringTok{"white"}\NormalTok{,}\StringTok{"pink"}\NormalTok{,}\StringTok{"orange"}\NormalTok{,}\StringTok{"purple"}\NormalTok{)) +}\StringTok{ }\KeywordTok{xlab}\NormalTok{(}\StringTok{" "}\NormalTok{) +}\KeywordTok{ylab}\NormalTok{(}\StringTok{" "}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Kaggle2018_EDA_files/figure-latex/unnamed-chunk-9-1.pdf}
+
+The most popular Programming language among most job titles is
+``Python''.It is most popular with Data Scientists - 50\% of Data
+Scientists use Python.``R'' is the most popular tool among Statisticians
+and Marketing Analysts.
 
 
 \end{document}

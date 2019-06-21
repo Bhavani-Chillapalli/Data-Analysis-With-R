@@ -3,9 +3,9 @@ title: "Extensive EDA - Kaggle Survey 2018"
 author: "Bhavani"
 date: "June 19, 2019"
 output:
-  word_document: default
   pdf_document: default
   html_document: default
+  word_document: default
 ---
 
 Loading Libraries
